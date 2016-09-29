@@ -77,6 +77,6 @@ confusionMatrix(predictLDA, testData$classe)
 ## Accuracy for Random Forest model was 0.988 (95% CI: (0.9862, 0.991)) compared to 0.6895 (95% CI: (0.6792, 0.6998))
 ## for LDA. The expected out-of-sample error is estimated at 0.005, or 0.5%.
 ## The expected out-of-sample error is calculated as 1 - accuracy for predictions made against the cross-validation set.
-## Test data set has 20 records so, with an accuracy about 98% on cross-validation data we can get good classification accuracy.
+## Test data set has 20 records so, with an accuracy about 99% on cross-validation data we can get good classification (close to 100%) ## accuracy.
 
 
