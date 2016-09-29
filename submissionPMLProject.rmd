@@ -1,0 +1,68 @@
+## Clean Training data - remove NA and time related columns
+
+pmlTrain<-read.csv("C:/Users/uu/Desktop/PML/Project/pml-training.csv", header=T, na.strings=c("NA", "#DIV/0!"))
+
+View(pmlTrain)
+
+rmNApmlTrain<-pmlTrain[, apply(pmlTrain, 2, function(x) !any(is.na(x)))] 
+
+View(rmNApmlTrain)
+
+## Clean Testing data - remove NA and time related columns
+
+pmlTest<-read.csv("C:/Users/uu/Desktop/PML/Project/pml-testing.csv", header=T, na.string=c("NA", "#DIV/0!"))
+
+View(noNApmlTest)
+
+rmNApmlTest<-pmlTest[, apply(pmlTest, 2, function(x) !any(is.na(x)))]
+
+View(rmNApmlTest)
+
+## Clean variables with user information, time and undefined
+
+cleanpmlTrain<-rmNApmlTrain[,-c(1:8)]
+
+dim(cleanpmlTrain)
+
+## 20 test cases with Validation data set : remove last id column
+
+cleanpmltest<-pmlTest[,names(cleanpmlTrain[,-52])]
+
+dim(cleanpmltest)
+
+## Data Partitioning 
+
+install.packages("caret")
+
+library(caret)
+
+inTrain<-createDataPartition(y=cleanpmlTrain$classe, p=0.60,list=False)
+
+trainingData<-cleanpmlTrain[inTrain,]
+
+testData<-cleanpmlTrain[-inTrain,] 
+
+## Results and Conclusions
+## Using random forest
+
+library(caret)
+
+set.seed(13333)
+
+fitControlStruct<-trainControl(method="cv", number=10, allowParallel=T, verbose=T)
+
+randForestFit<-train(classe~.,data=training, method="rf", trControl=fitControl2, verbose=F)
+
+predictRF<-predict(randForestFit, newdata=testData)
+
+confusionMatrix(predictRF, test$classe)
+
+## Check prediction on validation set
+
+predictionValidation<-predict(randForestFit, newdata=cleanpmltest)
+
+predictionValidation
+
+[1] B A B A A E D B A A B C B A E E A B B B
+Levels: A B C D E
+
