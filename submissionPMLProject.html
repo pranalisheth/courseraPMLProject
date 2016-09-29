@@ -1,0 +1,298 @@
+<html>
+<title> Submission of Project : Practical Machine Learning </title>
+<body>
+
+<br>
+<br>
+## Clean Training data - remove NA and time related columns
+
+<br>
+<br>
+pmlTrain<-read.csv("C:/Users/uu/Desktop/PML/Project/pml-training.csv", header=T, na.strings=c("NA", "#DIV/0!"))
+
+<br>
+<br>
+View(pmlTrain)
+
+<br>
+<br>
+rmNApmlTrain<-pmlTrain[, apply(pmlTrain, 2, function(x) !any(is.na(x)))] 
+
+<br>
+<br>
+View(rmNApmlTrain)
+
+<br>
+<br>
+## Clean Testing data - remove NA and time related columns
+
+<br>
+<br>
+pmlTest<-read.csv("C:/Users/uu/Desktop/PML/Project/pml-testing.csv", header=T, na.string=c("NA", "#DIV/0!"))
+
+<br>
+<br>
+View(noNApmlTest)
+
+<br>
+<br>
+rmNApmlTest<-pmlTest[, apply(pmlTest, 2, function(x) !any(is.na(x)))]
+
+<br>
+<br>
+View(rmNApmlTest)
+
+<br>
+<br>
+## Clean variables with user information, time and undefined
+
+<br>
+<br>
+cleanpmlTrain<-rmNApmlTrain[,-c(1:8)]
+
+<br>
+<br>
+dim(cleanpmlTrain)
+
+<br>
+<br>
+## 20 test cases with Validation data set : remove last id column
+
+<br>
+<br>
+cleanpmltest<-pmlTest[,names(cleanpmlTrain[,-52])]
+
+<br>
+<br>
+dim(cleanpmltest)
+
+<br>
+<br>
+## Data Partitioning 
+
+<br>
+<br>
+install.packages("caret")
+
+<br>
+<br>
+library(caret)
+
+<br>
+<br>
+inTrain<-createDataPartition(y=cleanpmlTrain$classe, p=0.60,list=False)
+
+<br>
+<br>
+trainingData<-cleanpmlTrain[inTrain,]
+
+<br>
+<br>
+testData<-cleanpmlTrain[-inTrain,] 
+
+<br>
+<br>
+## Results and Conclusions
+## Using random forest
+
+<br>
+<br>
+library(caret)
+
+<br>
+<br>
+set.seed(13333)
+
+<br>
+<br>
+fitControlStruct<-trainControl(method="cv", number=10, allowParallel=T, verbose=T)
+
+<br>
+<br>
+randForestFit<-train(classe~.,data=training, method="rf", trControl=fitControl2, verbose=F)
+
+<br>
+<br>
++ Fold01: mtry= 2 
+- Fold01: mtry= 2 
++ Fold01: mtry=26 
+- Fold01: mtry=26 
++ Fold01: mtry=51 
+- Fold01: mtry=51 
++ Fold02: mtry= 2 
+- Fold02: mtry= 2 
++ Fold02: mtry=26 
+- Fold02: mtry=26 
++ Fold02: mtry=51 
+- Fold02: mtry=51 
++ Fold03: mtry= 2 
+- Fold03: mtry= 2 
++ Fold03: mtry=26 
+- Fold03: mtry=26 
++ Fold03: mtry=51 
+- Fold03: mtry=51 
++ Fold04: mtry= 2 
+- Fold04: mtry= 2 
++ Fold04: mtry=26 
+- Fold04: mtry=26 
++ Fold04: mtry=51 
+- Fold04: mtry=51 
++ Fold05: mtry= 2 
+- Fold05: mtry= 2 
++ Fold05: mtry=26 
+- Fold05: mtry=26 
++ Fold05: mtry=51 
+- Fold05: mtry=51 
++ Fold06: mtry= 2 
+- Fold06: mtry= 2 
++ Fold06: mtry=26 
+- Fold06: mtry=26 
++ Fold06: mtry=51 
+- Fold06: mtry=51 
++ Fold07: mtry= 2 
+- Fold07: mtry= 2 
++ Fold07: mtry=26 
+- Fold07: mtry=26 
++ Fold07: mtry=51 
+- Fold07: mtry=51 
++ Fold08: mtry= 2 
+- Fold08: mtry= 2 
++ Fold08: mtry=26 
+- Fold08: mtry=26 
++ Fold08: mtry=51 
+- Fold08: mtry=51 
++ Fold09: mtry= 2 
+- Fold09: mtry= 2 
++ Fold09: mtry=26 
+- Fold09: mtry=26 
++ Fold09: mtry=51 
+- Fold09: mtry=51 
++ Fold10: mtry= 2 
+- Fold10: mtry= 2 
++ Fold10: mtry=26 
+- Fold10: mtry=26 
++ Fold10: mtry=51 
+- Fold10: mtry=51 
+<br>
+<br>
+Aggregating results
+<br>
+<br>
+Selecting tuning parameters
+<br>
+<br>
+Fitting mtry = 26 on full training set
+<br>
+<br>
+
+predictRF<-predict(randForestFit, newdata=testData)
+
+<br>
+<br>
+confusionMatrix(predictRF, test$classe)
+
+<br>
+<br>
+Confusion Matrix and Statistics
+
+<br>
+<br>
+          Reference
+<br>
+<br>
+Prediction    A    B    C    D    E
+<br>
+<br>
+         A 2229   20    0    0    1
+<br>
+<br>
+         B    2 1497   22    1    0
+<br>
+<br>
+         C    1    0 1341   28    1
+<br>
+<br>
+         D    0    0    5 1256    5
+<br>
+<br>
+         E    0    1    0    1 1435
+<br>
+<br>
+
+Overall Statistics
+<br>
+<br>
+                                         
+               Accuracy : 0.9888   
+<br>
+<br>      
+                 95% CI : (0.9862, 0.991)
+<br>
+<br>
+    No Information Rate : 0.2845         
+<br>
+<br>
+    P-Value [Acc > NIR] : < 2.2e-16      
+<br>
+<br>
+                                         
+                  Kappa : 0.9858         
+<br>
+<br>
+ Mcnemar's Test P-Value : NA             
+<br>
+<br>
+Statistics by Class:
+<br>
+<br>
+                     Class: A Class: B Class: C Class: D Class: E
+<br>
+<br>
+Sensitivity            0.9987   0.9862   0.9803   0.9767   0.9951
+<br>
+<br>
+Specificity            0.9963   0.9960   0.9954   0.9985   0.9997
+<br>
+<br>
+Pos Pred Value         0.9907   0.9836   0.9781   0.9921   0.9986
+<br>
+<br>
+Neg Pred Value         0.9995   0.9967   0.9958   0.9954   0.9989
+<br>
+<br>
+Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+<br>
+<br>
+Detection Rate         0.2841   0.1908   0.1709   0.1601   0.1829
+<br>
+<br>
+Detection Prevalence   0.2868   0.1940   0.1747   0.1614   0.1832
+<br>
+<br>
+Balanced Accuracy      0.9975   0.9911   0.9878   0.9876   0.9974
+<br>
+<br>
+
+## Check prediction on validation set
+
+<br>
+<br>
+predictionValidation<-predict(randForestFit, newdata=cleanpmltest)
+
+<br>
+<br>
+predictionValidation
+
+<br>
+<br>
+[1] B A B A A E D B A A B C B A E E A B B B
+<br>
+<br>
+Levels: A B C D E
+<br>
+<br>
+
+</body>
+</html>
+
+
