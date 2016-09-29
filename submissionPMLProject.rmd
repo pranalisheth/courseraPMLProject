@@ -49,9 +49,10 @@ library(caret)
 
 set.seed(13333)
 
+## 10 fold cross validation is used
 fitControlStruct<-trainControl(method="cv", number=10, allowParallel=T, verbose=T)
 
-randForestFit<-train(classe~.,data=training, method="rf", trControl=fitControl2, verbose=F)
+randForestFit<-train(classe~.,data=trainingData, method="rf", trControl=fitControlStruct, verbose=F)
 
 predictRF<-predict(randForestFit, newdata=testData)
 
