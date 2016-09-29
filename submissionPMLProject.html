@@ -291,7 +291,82 @@ predictionValidation
 Levels: A B C D E
 <br>
 <br>
+## Results and Conclusions
+## Using LDA
+<br>
+<br>
+ldaFit<-train(classe~.,data=trainingData, method="lda", trControl=fitControlStruct, verbose=F)
+<br>
+<br>
+Aggregating results
+          <br>
+<br>
+Fitting final model on full training set
+<br>
+<br>
+predictLDA <-predict(ldaFit, newdata=testData)
+<br>
+<br>
+confusionMatrix(predictLDA, testData$classe)
+<br>
+<br>
+Confusion Matrix and Statistics
+<br>
+<br>
+          Reference
+          <br>
+<br>
+Prediction    A    B    C    D    E
 
+         A 1843  248  148   68   71
+         B 60  919  135   72  216
+         C  184  185  884  158  146
+         D  139   85  169  902  147
+         E    6   81   32   86  862
+
+Overall Statistics
+<br>
+<br>                                          
+               Accuracy : 0.6895          
+                 95% CI : (0.6792, 0.6998)
+    No Information Rate : 0.2845          
+    P-Value [Acc > NIR] : < 2.2e-16       
+ <br>
+<br>                                         
+                  Kappa : 0.6067          
+ Mcnemar's Test P-Value : < 2.2e-16       
+<br>
+<br>
+Statistics by Class:
+<br>
+<br>
+                     Class: A Class: B Class: C Class: D Class: E
+Sensitivity            0.8257   0.6054   0.6462   0.7014   0.5978
+Specificity            0.9047   0.9237   0.8961   0.9177   0.9680
+Pos Pred Value         0.7750   0.6555   0.5678   0.6255   0.8079
+Neg Pred Value         0.9289   0.9070   0.9230   0.9400   0.9144
+Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+Detection Rate         0.2349   0.1171   0.1127   0.1150   0.1099
+Detection Prevalence   0.3031   0.1787   0.1984   0.1838   0.1360
+Balanced Accuracy      0.8652   0.7645   0.7712   0.8095   0.7829
+<br>
+<br>
+## Decision 
+          <br>
+<br>
+## Accuracy for Random Forest model was 0.988 (95% CI: (0.9862, 0.991)) compared to 0.6895 (95% CI: (0.6792, 0.6998))
+          <br>
+<br>
+## for LDA. The expected out-of-sample error is estimated at 0.005, or 0.5%.
+          <br>
+<br>
+## The expected out-of-sample error is calculated as 1 - accuracy for predictions made against the cross-validation set.
+          <br>
+<br>
+## Test data set has 20 records so, with an accuracy about 98% on cross-validation data we can get good classification accuracy.
+          
+          
+          
 </body>
 </html>
 
